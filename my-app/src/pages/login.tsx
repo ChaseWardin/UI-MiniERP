@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { loginAndGetProfile } from "../services/authent.ts";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -13,8 +15,10 @@ export default function Login() {
     try {
       const { token, profile } = await loginAndGetProfile(email, password);
 
-      console.log("Rol: " + profile.role.name);
       alert(`Bienvenido ${profile.full_name} (${profile.role.name})`);
+
+      navigate("/dashboard");
+
     } catch (err: any) {
       setError(err.message);
     }

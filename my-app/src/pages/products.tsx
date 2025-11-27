@@ -1,13 +1,29 @@
 import { useEffect, useState } from "react";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../services/products";
+import { 
+  getProducts, 
+  addProduct, 
+  updateProduct, 
+  deleteProduct, 
+} from "../services/products";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [newName, setNewName] = useState("");
 
-  const printProducts = async () => {
-    const products = await getProducts();
-  }
+  // Estado para edición
+  const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+
+  // Cargar productos al iniciar
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getProducts();
+      //console.log(data.results);
+      setProducts(data.results || []);
+    };
+    fetchProducts();
+  }, []);
 
   const handleAdd = async () => {
     const newProduct = await addProduct({ name: newName });
@@ -18,6 +34,20 @@ export default function ProductsPage() {
   const handleDelete = async (id: number) => {
     await deleteProduct(id);
     setProducts(products.filter(p => p.id !== id));
+  };
+
+  const handleEdit = (product: any) => {
+    setEditId(product.id);
+    setEditName(product.name);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editId) return;
+    const updated = await updateProduct(editId, { name: editName });
+
+    setProducts(products.map(p => p.id === editId ? updated : p));
+    setIsEditing(false);
   };
 
   return (
@@ -49,14 +79,34 @@ export default function ProductsPage() {
               <td>{p.id}</td>
               <td>{p.name}</td>
               <td>
+                <button onClick={() => handleEdit(p)}>Editar</button>
                 <button onClick={() => handleDelete(p.id)}>Eliminar</button>
-                {/* Puedes agregar editar aquí */}
               </td>
             </tr>
           ))}
         </tbody>
-        <button >Limpiar lista</button>
       </table>
+
+      {/* Edit Modal */}
+      {isEditing && (
+        <div style={{
+          position: "fixed", 
+          top: "30%", 
+          left: "30%", 
+          background: "white", 
+          padding: "20px", 
+          border: "1px solid black"
+        }}>
+          <h3>Editar producto</h3>
+          <input 
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+          />
+          <br />
+          <button onClick={handleSaveEdit}>Guardar</button>
+          <button onClick={() => setIsEditing(false)}>Cancelar</button>
+        </div>
+      )}
     </div>
   );
 }
