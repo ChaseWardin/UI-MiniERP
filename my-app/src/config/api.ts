@@ -6,6 +6,6 @@ export const API_CONFIG = {
         PROFILE: '/api/users/users/profile/',
         PRODUCTS: '/api/inventory/products/',
         SALES: '/api/sales/orders/',
-        CLIENTS : 'api/sales/customers/'
+        CLIENTS : '/api/sales/customers/'
     }
 };
