@@ -44,9 +44,6 @@ export default function VentasPage() {
 
 		const newVenta = await addVenta({
 			costumer: client,
-			product_id: newProductId,
-			quantity: newQuantity, 
-			price: newPrice,
 		});
 
 		setVentas([...ventas, newVenta]);
@@ -101,7 +98,7 @@ export default function VentasPage() {
 								{v.delivery_date ? String(v.delivery_date).slice(0, 10) : "---"}
 							</td>
 							<td className="py-2 text-center">
-								{v.customer_id?.name ? String(v.customer_id.name).slice(0, 10) : "---"}
+								{v.customer?.name ? String(v.customer.name).slice(0, 10) : "---"}
 							</td>
 							<td className="py-2 text-center">
 								{v.items?.[0]?.quantity ??  "0"}
