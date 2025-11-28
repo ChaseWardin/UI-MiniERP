@@ -1,4 +1,5 @@
 import { API_CONFIG } from "../config/api.ts"
+import { getProducts } from "./products.ts";
 
 export async function getVentas() {
     const token = localStorage.getItem("token");
@@ -16,18 +17,29 @@ export async function getVentas() {
 
 export async function addVenta(venta: any) {
     const token = localStorage.getItem("token");
-    return fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.SALES , {
+
+    return fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.SALES, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            product: venta.product_id,
-            quantity: venta.quantity
+            customer: venta.customer, // o el que quieras
+            order_date: new Date().toISOString().slice(0, 10),
+            delivery_date: new Date().toISOString().slice(0, 10),
+            notes: "",
+            items: [
+                {
+                    product: venta.product_id,
+                    quantity: venta.quantity,
+                    unit_price: venta.price
+                }
+            ]
         }),
-    }).then((res) => res.json())
+    }).then((res) => res.json());
 }
+
 
 export async function deleteVenta(id: number) {
     const token = localStorage.getItem("token");

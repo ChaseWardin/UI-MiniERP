@@ -1,18 +1,32 @@
 import { useEffect, useState } from "react";
 import { getVentas, addVenta, deleteVenta } from "../services/ventas";
+import { getProducts } from "../services/products";
+import { getClients } from "../services/clients";
 
 export default function VentasPage() {
 	const [ventas, setVentas] = useState<any[]>([]);
 	const [newProductId, setNewProductId] = useState("");
+	const [newClientId, setNewClientId] = useState("");
 	const [newQuantity, setNewQuantity] = useState<number>(1);
+	const [newPrice, setNewPrice] = useState<number>(0);
+
+	const [products, setProducts] = useState<any[]>([]);
+	const [clients, setClients]  = useState<any[]>([]); 
 
 	const [isAdd, setIsAdd] = useState(false);
 
 	// Cargar ventas al iniciar
 	useEffect(() => {
 		const fetchVentas = async () => {
+			const dataC = await getClients();
+			setClients(dataC.results || []);
+
+			const dataP = await getProducts();
+			setProducts(dataP.results || []);
+
 			const data = await getVentas();
-			setVentas(data.results || data || []);
+			console.log(data.results);
+			setVentas(data.results || []);
 		};
 		fetchVentas();
 	}, []);
@@ -28,8 +42,10 @@ export default function VentasPage() {
 		}
 
 		const newVenta = await addVenta({
+			costumer: newClientId,
 			product_id: newProductId,
-			quantity: newQuantity,
+			quantity: newQuantity, 
+			price: newPrice,
 		});
 
 		setVentas([...ventas, newVenta]);
@@ -63,8 +79,11 @@ export default function VentasPage() {
 				<thead>
 					<tr className="border-b border-slate-700">
 						<th className="w-1/4 text-center">ID Venta</th>
-						<th className="w-1/4 text-center">Fecha</th>
-						<th className="w-1/4 text-center">Total ($)</th>
+						<th className="w-1/4 text-center">Fecha Orden</th>
+						<th className="w-1/4 text-center">Fecha Envio</th>
+						<th className="w-1/4 text-center">Cliente</th> 
+						<th className="w-1/4 text-center">Cantidad</th>
+						<th className="w-1/4 text-center">Precio ($)</th>
 						<th className="w-1/4 text-center">Acciones</th>
 					</tr>
 				</thead>
@@ -74,10 +93,19 @@ export default function VentasPage() {
 						<tr key={v.id} className="border-b border-slate-800">
 							<td className="py-2 text-center">{v.id}</td>
 							<td className="py-2 text-center">
-								{v.created_at ? String(v.created_at).slice(0, 10) : "---"}
+								{v.order_date ? String(v.order_date).slice(0, 10) : "---"}
 							</td>
 							<td className="py-2 text-center">
-								{v.total_amount ?? v.total ?? "---"}
+								{v.delivery_date ? String(v.delivery_date).slice(0, 10) : "---"}
+							</td>
+							<td className="py-2 text-center">
+								{v.customer ? String(v.customer.name).slice(0, 10) : "---"}
+							</td>
+							<td className="py-2 text-center">
+								{v.items.quantity ? Number(v.items.quantity) : "0"}
+							</td>
+							<td className="py-2 text-center">
+								{v.items.unit_price ? Number(v.items.unit_price) : "0"}
 							</td>
 							<td className="py-2 text-center">
 								<button
@@ -102,14 +130,26 @@ export default function VentasPage() {
 
 						<div className="space-y-4 mb-6">
 							<div className="flex flex-col gap-1">
-								<label className="text-sm text-slate-300">ID Producto</label>
-								<input
-									type="number"
+								<label className="text-sm text-slate-300">Producto</label>
+								<select
 									value={newProductId}
-									placeholder="ID del producto vendido (ej: 5)"
-									onChange={(e) => setNewProductId(e.target.value)}
+									onChange={(e) => {
+										setNewProductId(e.target.value)
+										const id = Number(e.target.value);
+
+										const product = products.find(p => p.id === id);
+    									setNewPrice(product ? Number(product.price) : 0);
+										}		
+									}
 									className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-600 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								/>
+								>
+							    <option value="">Seleccione un producto...</option>
+								{products.map((p) => (
+    								<option key={p.id} value={p.id}>
+      									{p.name}
+    								</option>
+  								))}
+								</select>
 							</div>
 
 							<div className="flex flex-col gap-1">
@@ -121,6 +161,32 @@ export default function VentasPage() {
 									onChange={(e) => setNewQuantity(Number(e.target.value))}
 									className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-600 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 								/>
+							</div>
+
+							<div className="flex flex-col gap-1">
+								<label className="text-sm text-slate-300">Cliente</label>
+								<select
+									value={newClientId}
+									onChange={(e) => setNewClientId(e.target.value)}
+									className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-600 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								>
+							    <option value="">Seleccione un cliente...</option>
+								{clients.map((c) => (
+    								<option key={c.id} value={c.id}>
+      									{c.name}
+    								</option>
+  								))}
+								</select>
+							</div>
+
+							<div className="flex flex-col gap-1">
+  								<label className="text-sm text-slate-300">Precio del producto</label>
+  								<input
+    								type="number"
+    								value={newPrice}
+    								readOnly
+    								className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-600 text-slate-100"
+  								/>
 							</div>
 						</div>
 
