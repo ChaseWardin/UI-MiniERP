@@ -24,10 +24,17 @@ export async function addVenta(venta: any) {
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            customer: venta.customer,
+            customer_id: venta.customer,
             order_date: new Date().toISOString().slice(0, 10),
             delivery_date: new Date().toISOString().slice(0, 10),
             notes: "",
+            items: [
+                {
+                    product: venta.product_id,
+                    quantity: venta.quantity,
+                    unit_price: venta.price
+                }
+            ]
         }),
     }).then((res) => res.json());
 }

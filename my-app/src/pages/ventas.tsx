@@ -44,6 +44,13 @@ export default function VentasPage() {
 
 		const newVenta = await addVenta({
 			costumer: client,
+			items: [
+				{
+                    product: newProductId,
+                    quantity: newQuantity,
+                    unit_price: newPrice
+                }
+			]
 		});
 
 		setVentas([...ventas, newVenta]);

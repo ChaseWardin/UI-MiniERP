@@ -47,10 +47,20 @@ export default function ProductsPage() {
     setIsAdd(false);
   };
 
-  const handleDelete = async (id: number) => {
-    await deleteProduct(id);
+ const handleDelete = async (id: number) => {
+  const confirmed = window.confirm("¿Seguro que quieres eliminar este producto?");
+  if (!confirmed) return;
+
+  try {
+    const result = await deleteProduct(id);
+
     setProducts(products.filter((p) => p.id !== id));
-  };
+
+  } catch (error) {
+    console.error("Error en handleDelete:", error);
+    alert("Ocurrió un error inesperado. Mira la consola.");
+  }
+};
 
   const handleEdit = (product: any) => {
     setEditId(product.id);
