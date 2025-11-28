@@ -23,13 +23,17 @@ export async function getProductsById(id : number) {
 export async function addProduct(product: any) {
     const token = localStorage.getItem("token");
     return fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PRODUCTS , {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(product),
-  }).then((res) => res.json());
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: product.name,
+        price: product.price,
+        stock_quantity: product.stock_quantity
+      })
+    }).then((res) => res.json());
 }
 
 export async function updateProduct(id: number, product: any) {
