@@ -14,10 +14,7 @@ export default function Login() {
     setError("");
 
     try {
-      const { token, profile } = await loginAndGetProfile(email, password);
-
-      alert(`Bienvenido ${profile.full_name} (${profile.role.name})`);
-
+      const token = await loginAndGetProfile(email, password);
       navigate("/dashboard");
     } catch (err: any) {
       setError(err.message);

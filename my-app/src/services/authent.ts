@@ -19,7 +19,7 @@ interface UserProfile {
  * Hace login y devuelve token
  */
 export async function loginAndGetProfile(email: string,password: string) : Promise<{ token: string; profile: UserProfile }> {
-  console.log(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LOGIN);
+
   const loginResponse = await fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LOGIN, {
     method: "POST",
     headers: {
@@ -54,4 +54,8 @@ export async function loginAndGetProfile(email: string,password: string) : Promi
   const profile: UserProfile = await profileResponse.json();
 
   return { token, profile };
+}
+
+export function logout() {
+  localStorage.removeItem("token");
 }
