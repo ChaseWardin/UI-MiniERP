@@ -79,13 +79,13 @@ export default function VentasPage() {
 			<table className="w-full text-left text-slate-100">
 				<thead>
 					<tr className="border-b border-slate-700">
-						<th className="w-1/4 text-center">ID Venta</th>
-						<th className="w-1/4 text-center">Fecha Orden</th>
-						<th className="w-1/4 text-center">Fecha Envio</th>
-						<th className="w-1/4 text-center">Cliente</th> 
-						<th className="w-1/4 text-center">Cantidad</th>
-						<th className="w-1/4 text-center">Precio ($)</th>
-						<th className="w-1/4 text-center">Acciones</th>
+						<th className="w-1/7 text-center">ID Venta</th>
+						<th className="w-1/7 text-center">Fecha Orden</th>
+						<th className="w-1/7 text-center">Fecha Envio</th>
+						<th className="w-1/7 text-center">Cliente</th> 
+						<th className="w-1/7 text-center">Cantidad</th>
+						<th className="w-1/7 text-center">Precio</th>
+						<th className="w-1/7 text-center">Acciones</th>
 					</tr>
 				</thead>
 
