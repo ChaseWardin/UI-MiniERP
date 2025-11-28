@@ -1,5 +1,4 @@
 import { API_CONFIG } from "../config/api.ts"
-import { getProducts } from "./products.ts";
 
 export async function getVentas() {
     const token = localStorage.getItem("token");
@@ -17,7 +16,7 @@ export async function getVentas() {
 
 export async function addVenta(venta: any) {
     const token = localStorage.getItem("token");
-
+    console.log(venta);
     return fetch(API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.SALES, {
         method: "POST",
         headers: {
@@ -25,7 +24,7 @@ export async function addVenta(venta: any) {
             Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-            customer: venta.customer, // o el que quieras
+            customer_id: venta.customer,
             order_date: new Date().toISOString().slice(0, 10),
             delivery_date: new Date().toISOString().slice(0, 10),
             notes: "",

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { getVentas, addVenta, deleteVenta } from "../services/ventas";
 import { getProducts } from "../services/products";
-import { getClients } from "../services/clients";
+import { getClients,getClientsById } from "../services/clients";
 
 export default function VentasPage() {
 	const [ventas, setVentas] = useState<any[]>([]);
-	const [newProductId, setNewProductId] = useState("");
-	const [newClientId, setNewClientId] = useState("");
+	const [newProductId, setNewProductId] = useState(0);
+	const [newClientId, setNewClientId] = useState(0);
 	const [newQuantity, setNewQuantity] = useState<number>(1);
 	const [newPrice, setNewPrice] = useState<number>(0);
 
@@ -40,16 +40,17 @@ export default function VentasPage() {
 			alert("ID de producto y cantidad son obligatorios.");
 			return;
 		}
+		const client = await getClientsById(newClientId);
 
 		const newVenta = await addVenta({
-			costumer: newClientId,
+			costumer: client,
 			product_id: newProductId,
 			quantity: newQuantity, 
 			price: newPrice,
 		});
 
 		setVentas([...ventas, newVenta]);
-		setNewProductId("");
+		setNewProductId(0);
 		setNewQuantity(1);
 		setIsAdd(false);
 	};
@@ -89,8 +90,8 @@ export default function VentasPage() {
 				</thead>
 
 				<tbody>
-					{ventas.map((v) => (
-						<tr key={v.id} className="border-b border-slate-800">
+					{ventas.map((v,index) => (
+						<tr key={index} className="border-b border-slate-800">
 							<td className="py-2 text-center">{v.id}</td>
 							<td className="py-2 text-center">
 								{v.order_date ? String(v.order_date).slice(0, 10) : "---"}
@@ -99,13 +100,13 @@ export default function VentasPage() {
 								{v.delivery_date ? String(v.delivery_date).slice(0, 10) : "---"}
 							</td>
 							<td className="py-2 text-center">
-								{v.customer ? String(v.customer.name).slice(0, 10) : "---"}
+								{v.customer_id?.name ? String(v.customer_id.name).slice(0, 10) : "---"}
 							</td>
 							<td className="py-2 text-center">
-								{v.items.quantity ? Number(v.items.quantity) : "0"}
+								{v.items?.[0]?.quantity ??  "0"}
 							</td>
 							<td className="py-2 text-center">
-								{v.items.unit_price ? Number(v.items.unit_price) : "0"}
+								{v.items?.[0]?.unit_price ?? "0"}
 							</td>
 							<td className="py-2 text-center">
 								<button
@@ -134,7 +135,7 @@ export default function VentasPage() {
 								<select
 									value={newProductId}
 									onChange={(e) => {
-										setNewProductId(e.target.value)
+										setNewProductId(Number(e.target.value))
 										const id = Number(e.target.value);
 
 										const product = products.find(p => p.id === id);
@@ -167,7 +168,7 @@ export default function VentasPage() {
 								<label className="text-sm text-slate-300">Cliente</label>
 								<select
 									value={newClientId}
-									onChange={(e) => setNewClientId(e.target.value)}
+									onChange={(e) => setNewClientId(Number(e.target.value))}
 									className="w-full px-3 py-2 rounded-lg bg-slate-800 border border-slate-600 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
 								>
 							    <option value="">Seleccione un cliente...</option>
