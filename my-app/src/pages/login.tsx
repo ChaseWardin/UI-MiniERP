@@ -15,7 +15,10 @@ export default function Login() {
 
     try {
       const token = await loginAndGetProfile(email, password);
+<<<<<<< HEAD
 
+=======
+>>>>>>> a3575bfca54d1396026617ad3f5ded6863ed1520
       navigate("/dashboard");
     } catch (err: any) {
       setError(err.message);

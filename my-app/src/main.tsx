@@ -6,7 +6,6 @@ import './index.css';
 
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
-import ProductsPage from './pages/products';
 import ProtectedRoute from './components/ProtectedRoute';
 
 createRoot(document.getElementById('root')!).render(
@@ -24,17 +23,7 @@ createRoot(document.getElementById('root')!).render(
               <Dashboard />
             </ProtectedRoute>
           } 
-        />
-
-        {/* Productos */}
-        <Route 
-          path="/dashboard/products" 
-          element={
-            <ProtectedRoute>
-              <ProductsPage />
-            </ProtectedRoute>
-          } 
-        />
+        />        
       </Routes>
     </BrowserRouter>
   </StrictMode>
