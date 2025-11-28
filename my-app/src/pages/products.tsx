@@ -5,8 +5,10 @@ import {
   updateProduct, 
   deleteProduct, 
 } from "../services/products";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductsPage() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<any[]>([]);
   const [newName, setNewName] = useState("");
   const [newPrice, setNewPrice] = useState<number>(0);
@@ -62,10 +64,15 @@ export default function ProductsPage() {
     setIsEditing(false);
   };
 
+  const handleBack = async () => {
+    navigate("/dashboard");
+  }
+
   return (
     <div>
       <h1>Productos</h1>
       <button onClick={handleSetAdd}>Añadir</button>
+      <button onClick={handleBack}>Volver</button>
 
       {/* Products table */}
       <table border={1} cellPadding={10}>
