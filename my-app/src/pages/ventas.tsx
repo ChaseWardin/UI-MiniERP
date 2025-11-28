@@ -51,6 +51,7 @@ export default function VentasPage() {
 
 		setVentas([...ventas, newVenta]);
 		setNewProductId(0);
+		setNewClientId(0);
 		setNewQuantity(1);
 		setIsAdd(false);
 	};
