@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginAndGetProfile } from "../services/authent.ts";
 import { useNavigate } from "react-router-dom";
+import styles from './login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,23 +26,32 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "0 auto" }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Ingresar</button>
+    <div className={styles.main}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h2>Iniciar Sesion</h2>
+        {error && <p className={styles.error}>Usuario o contraseña incorrecta</p>}
+        <div className={styles.seccion}>
+          <label>Correo electronico:</label>
+          <input
+            className={styles.input}
+            type="email"
+            placeholder="Ej: nombre@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className={styles.seccion}>
+          <label>Contraseña:</label>
+          <input
+            className={styles.input}
+            type="password"
+            placeholder="Ingrese su contraseña..."
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        
+        <button className={styles.button} type="submit">Ingresar</button>
       </form>
     </div>
   );
