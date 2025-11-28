@@ -1,26 +1,17 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "../components/SideBar";
+import ProductsPage from "../pages/products.tsx";
+//import ventasPage from "../pages/ventas.tsx";
 
 export default function Dashboard() {
+  const [option, setOption] = useState("producto");
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      
-      {/* Sidebar */}
-      <aside style={{ width: "250px", background: "#1E293B", color: "white", padding: "20px" }}>
-        <h2>Dashboard</h2>
-        <nav>
-          <ul>
-            <li><Link to="/dashboard/products" style={{ color: "white" }}>Productos</Link></li>
-            <li><Link to="/dashboard/customers" style={{ color: "white" }}>Clientes</Link></li>
-            <li><Link to="/dashboard/orders" style={{ color: "white" }}>Ventas</Link></li>
-          </ul>
-        </nav>
-      </aside>
-
-      {/* Content */}
-      <main style={{ flex: 1, padding: "20px" }}>
-        <h1>Bienvenido al Panel</h1>
-        <p>Selecciona una opción del menú.</p>
-      </main>
+    <div className="flex min-h-screen">
+      <Sidebar onSelect={setOption} />
+      <div className="flex-1 bg-slate-900">
+        {option === "producto" && <ProductsPage />}
+        {option === "venta" && <p>Página de ventas</p>}
+      </div>
     </div>
   );
 }
